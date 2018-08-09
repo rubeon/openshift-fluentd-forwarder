@@ -21,7 +21,7 @@ objects:
           openshift.io/imported-from: docker.io/centos/7
         from:
           kind: DockerImage
-          name: docker.io/centos/7
+          name: centos7
         referencePolicy:
           type: Source
 - apiVersion: v1
