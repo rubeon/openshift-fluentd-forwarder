@@ -29,17 +29,32 @@ LABEL io.k8s.description="Fluentd container for collecting logs from other fluen
   name="fluentd-forwarder" \
   architecture=x86_64
 
+RUN apt-get update
+RUN apt-get install -y gettext-base libnss-wrapper bc make
+RUN gem install -N --conservative --minimal-deps --no-document \
+    fluentd:${FLUENTD_VERSION} \
+    'activesupport:<5' \
+    'public_suffix:<3.0.0' \
+    'fluent-plugin-record-modifier:<1.0.0' \
+    'fluent-plugin-rewrite-tag-filter:<2.0.0' \
+    fluent-plugin-kubernetes_metadata_filter \
+    fluent-plugin-rewrite-tag-filter \
+    fluent-plugin-secure-forward \
+    'fluent-plugin-remote_syslog:<1.0.0' \
+    'fluent-plugin-elasticsearch'
+
 # add files
 ADD run.sh fluentd.conf.template passwd.template fluentd-check.sh ${HOME}/
 ADD common-*.sh /tmp/
+ADD deb*.sh /tmp/
 
 # set permissions on files
 RUN chmod g+rx ${HOME}/fluentd-check.sh && \
-    chmod +x /tmp/common-*.sh
+    chmod +x /tmp/*.sh
 
 # execute files and remove when done
-RUN /tmp/common-install.sh && \
-    rm -f /tmp/common-*.sh
+RUN /tmp/deb-install.sh && \
+    rm -f /tmp/deb-*.sh
 
 # set working dir
 WORKDIR ${HOME}

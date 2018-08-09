@@ -3,7 +3,7 @@
 # get release version
 RELEASE=$(cat /etc/redhat-release)
 YUM_ARGS="--setopt=tsflags=nodocs"
-
+APT_ARGS=" -y"
 
 # shared packages
 # - build tools for building gems	+# add files
